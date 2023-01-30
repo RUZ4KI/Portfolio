@@ -5,13 +5,13 @@ import NextLink from 'next/link'
 import { ChevronRightIcon } from "@chakra-ui/icons"
 import { BioSection, BioYear } from "../components/bio"
 import Layout from "../components/layouts/article"
-import { IoLogoGithub, IoLogoTwitter } from 'react-icons/io5'
+import { IoLogoGithub, IoLogoLinkedin, IoLogoTwitter } from 'react-icons/io5'
 
 const Page = () => {
     return (
         <Layout>
             <Container>
-                <Box borderRadius="lg" bg={useColorModeValue('whiteAlpha.500', 'whiteAlpha.300')} p={3} mb={6} align='center'>
+                <Box borderRadius="lg" bg={useColorModeValue('whiteAlpha.500', 'whiteAlpha.300')} p={3} mb={6} mt={16} align='center'>
                     Namaste, I&apos;m a full-stack developer based in India!
                 </Box>
 
@@ -80,12 +80,19 @@ const Page = () => {
                             </Link>
                             </ListItem>
                             <ListItem>
+                            <Link target="_blank" href="www.linkedin.com/in/rushikesh-kate-253b9018b">
+                                    <Button variant="ghost" colorScheme="teal" leftIcon={<Icon as={IoLogoLinkedin} />} >
+                                    @rushikesh-kate
+                                </Button>
+                            </Link>
+                            </ListItem>
+                            <ListItem>
                             <Link target="_blank" href="https://twitter.com/Rushikesh_23">
                                 <Button variant="ghost" colorScheme="teal" leftIcon={<Icon as={IoLogoTwitter}/>} >
                                     @Rushikesh_23
                                 </Button>
                             </Link>
-                        </ListItem>
+                            </ListItem>
                         </List>
                     </Heading>
                 </Section>
