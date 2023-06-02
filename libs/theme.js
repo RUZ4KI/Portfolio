@@ -1,13 +1,13 @@
 import { extendTheme } from '@chakra-ui/react'
 import { mode } from '@chakra-ui/theme-tools'
 
-const style = {
+const styles = {
     global: props => ({
-        body: {
-            bg: mode('#f0e7db','#202023')(props)
-        }
+      body: {
+        bg: mode('#f0e7db', '#202023')(props)
+      }
     })
-}
+  }
 
 const components = {
     Heading: {
@@ -44,5 +44,5 @@ const config = {
     useSystemColorMode: true
 }
 
-const theme = extendTheme({ style, components, fonts, colors, config })
+const theme = extendTheme({ styles, components, fonts, colors, config })
 export default theme
