@@ -1,3 +1,7 @@
 module.exports = {
-    reactStrictMode: true
+  reactStrictMode: true,
+  turbopack: {
+    root: __dirname
+  },
+  outputFileTracingRoot: __dirname
 }
