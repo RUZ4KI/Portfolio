@@ -53,9 +53,11 @@ const Page = () => {
               borderColor="whiteAlpha.800"
               borderWidth={2}
               borderStyle="solid"
-              maxWidth="100px"
+              boxSize={{ base: '112px', md: '120px' }}
               display="inline-block"
               borderRadius="full"
+              objectFit="cover"
+              objectPosition="center bottom"
               src="/images/rushikesh.jpg"
               alt="Profile Image"
             />
