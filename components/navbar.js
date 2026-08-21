@@ -2,7 +2,6 @@ import {
   Box,
   Container,
   Flex,
-  Heading,
   IconButton,
   Link,
   Menu,
@@ -22,7 +21,11 @@ const LinkItem = ({ href, path, target, children, ...props }) => {
       asChild
       p={2}
       bg={active ? 'grassTeal' : undefined}
-      color={active ? '#202023' : { base: '#1a202c', _dark: 'rgba(255, 255, 255, 0.92)' }}
+      color={
+        active
+          ? '#202023'
+          : { base: '#1a202c', _dark: 'rgba(255, 255, 255, 0.92)' }
+      }
       {...props}
     >
       <NextLink href={href} target={target} scroll={false}>
@@ -47,21 +50,20 @@ const Navbar = props => {
       <Container
         display="flex"
         p={2}
-        maxW="768px"
+        maxW="960px"
         wrap="wrap"
         align="center"
         justify="space-between"
       >
         <Flex align="center" mr={5}>
-          <Heading
-            as="h1"
+          <Box
             fontSize="30px"
             fontWeight={700}
             lineHeight="36px"
             letterSpacing="tighter"
           >
             <Logo />
-          </Heading>
+          </Box>
         </Flex>
         <Stack
           direction={{ base: 'column', md: 'row' }}

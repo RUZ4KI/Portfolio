@@ -1,193 +1,46 @@
 import {
   Box,
-  Button,
-  Container,
+  Flex,
   Heading,
+  Icon,
   Image,
+  Link,
   List,
-  Icon
+  Text
 } from '@chakra-ui/react'
-import Paragraph from '../components/paragraph'
-import Section from '../components/section'
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform
+} from 'framer-motion'
 import NextLink from 'next/link'
-import { FiChevronRight } from 'react-icons/fi'
-import { BioSection, BioYear } from '../components/bio'
-import Layout from '../components/layouts/article'
+import { FiArrowUpRight } from 'react-icons/fi'
 import { IoLogoGithub, IoLogoLinkedin, IoLogoTwitter } from 'react-icons/io5'
+import {
+  BioEntry,
+  BioEntryDate,
+  BioEntryDescription,
+  BioEntryTitle
+} from '../components/bio'
+import Layout from '../components/layouts/article'
+import Section from '../components/section'
 
-const Page = () => {
-  return (
-    <Layout>
-      <Container maxW="60ch" px={4}>
-        <Box
-          borderRadius="lg"
-          bg={{ base: 'whiteAlpha.500', _dark: 'whiteAlpha.300' }}
-          p={3}
-          mb={6}
-          mt={16}
-          textAlign="center"
-        >
-          Namaste, I&apos;m a full-stack web and mobile developer based in India!
-        </Box>
+const mutedColor = { base: '#525252', _dark: 'rgba(255, 255, 255, 0.68)' }
+const accentColor = { base: '#246f6c', _dark: '#81e6d9' }
+const hairline = { base: 'blackAlpha.300', _dark: 'whiteAlpha.200' }
 
-        <Box display={{ md: 'flex' }}>
-          <Box flexGrow={1}>
-            <Heading
-              as="h2"
-              fontSize={{ base: '30px', md: '36px' }}
-              fontWeight={700}
-              lineHeight={{ base: '39.9px', md: '43.2px' }}
-            >
-              Rushikesh Kate
-            </Heading>
-            <p>Full-Stack Web &amp; Mobile Developer</p>
-          </Box>
-          <Box
-            flexShrink={0}
-            mt={{ base: 4, md: 0 }}
-            ml={{ md: 6 }}
-            textAlign="center"
-            pb={{ base: '6px', md: 0 }}
-          >
-            <Image
-              borderColor="whiteAlpha.800"
-              borderWidth={2}
-              borderStyle="solid"
-              boxSize={{ base: '112px', md: '120px' }}
-              display="inline-block"
-              borderRadius="full"
-              objectFit="cover"
-              objectPosition="center bottom"
-              src="/images/rushikesh.jpg"
-              alt="Profile Image"
-            />
-          </Box>
-        </Box>
-        <Section delay={0.1}>
-          <Heading as="h3" {...sectionTitleStyles}>
-            Work
-          </Heading>
-          <Paragraph>
-            I build production-ready web and mobile products across the stack,
-            from React and React Native interfaces to backend APIs, databases,
-            cloud infrastructure, and release pipelines. I currently work at
-            Reveal Healthtech, building healthcare products that make complex
-            workflows simpler for patients, care teams, and health coaches.
-          </Paragraph>
-          <Box textAlign="center" my={4}>
-            <Button
-              asChild
-              bg={{ base: '#edf2f7', _dark: 'rgba(255, 255, 255, 0.08)' }}
-              color={{ base: '#1a202c', _dark: 'rgba(255, 255, 255, 0.92)' }}
-              borderRadius="6px"
-              fontSize="16px"
-              fontWeight={600}
-              lineHeight="19.2px"
-              _hover={{
-                bg: { base: '#e2e8f0', _dark: 'rgba(255, 255, 255, 0.12)' }
-              }}
-              _icon={{ width: '1em', height: '1em' }}
-            >
-              <NextLink href="/works">
-                My portfolio
-                <FiChevronRight />
-              </NextLink>
-            </Button>
-          </Box>
-        </Section>
-        <Section delay={0.2}>
-          <Heading as="h3" {...sectionTitleStyles}>
-            Bio
-          </Heading>
-          <BioSection>
-            <BioYear>1999</BioYear>
-            Born in Nagpur, India.
-          </BioSection>
-          <BioSection>
-            <BioYear>2021</BioYear>
-            Completed the Bachelor&apos;s of Engineering from YCCE Nagpur
-          </BioSection>
-          <BioSection>
-            <BioYear>Sep 2021 – Jul 2023</BioYear>
-            Full-Stack Developer at KeepWorks
-          </BioSection>
-          <BioSection>
-            <BioYear>Jul 2023 – Present</BioYear>
-            Senior Full-Stack Developer at Reveal Healthtech
-          </BioSection>
-        </Section>
-        <Section delay={0.25}>
-          <Heading as="h3" {...sectionTitleStyles}>
-            Skills
-          </Heading>
-          <Box display="flex" flexWrap="wrap" gap={2}>
-            {skills.map(skill => (
-              <Box key={skill} as="span" {...skillTagStyles}>
-                {skill}
-              </Box>
-            ))}
-          </Box>
-        </Section>
-        <Section delay={0.3}>
-          <Heading as="h3" {...sectionTitleStyles}>
-            I ❤️
-          </Heading>
-          <Paragraph>Cardistry, Anime, Robotics</Paragraph>
-        </Section>
-        <Section delay={0.3}>
-          <Heading as="h3" {...sectionTitleStyles}>
-            On the web
-            <List.Root listStyleType="none" p={0} m={0}>
-              <List.Item>
-                <Button asChild {...socialButtonStyles}>
-                  <a target="_blank" rel="noreferrer" href="https://github.com/RUZ4KI">
-                    <Icon as={IoLogoGithub} />
-                    @RUZ4KI
-                  </a>
-                </Button>
-              </List.Item>
-              <List.Item>
-                <Button asChild {...socialButtonStyles}>
-                  <a
-                    target="_blank"
-                    rel="noreferrer"
-                    href="https://www.linkedin.com/in/rushikesh-kate-253b9018b"
-                  >
-                    <Icon as={IoLogoLinkedin} />
-                    @rushikesh-kate
-                  </a>
-                </Button>
-              </List.Item>
-              <List.Item>
-                <Button asChild {...socialButtonStyles}>
-                  <a
-                    target="_blank"
-                    rel="noreferrer"
-                    href="https://twitter.com/Rushikesh_23"
-                  >
-                    <Icon as={IoLogoTwitter} />
-                    @Rushikesh_23
-                  </a>
-                </Button>
-              </List.Item>
-            </List.Root>
-          </Heading>
-        </Section>
-      </Container>
-    </Layout>
-  )
-}
-
-const sectionTitleStyles = {
-  fontSize: '20px',
-  fontWeight: 700,
-  lineHeight: { base: '26.6px', md: '24px' },
-  textDecoration: 'underline',
-  textUnderlineOffset: '6px',
-  textDecorationColor: '#525252',
-  textDecorationThickness: '4px',
-  mt: 3,
-  mb: 4
+const heroItem = {
+  hidden: { opacity: 0, y: 18 },
+  visible: order => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.55,
+      delay: 0.08 + order * 0.09,
+      ease: [0.22, 1, 0.36, 1]
+    }
+  })
 }
 
 const skills = [
@@ -210,32 +63,488 @@ const skills = [
   'Cypress'
 ]
 
-const skillTagStyles = {
-  bg: { base: 'whiteAlpha.800', _dark: 'whiteAlpha.200' },
-  color: { base: '#1a202c', _dark: 'rgba(255, 255, 255, 0.92)' },
-  borderRadius: '10px',
-  px: 3,
-  py: 1.5,
-  fontSize: '15px',
-  fontWeight: 600,
-  lineHeight: '20px',
-  transition: 'transform 0.2s ease, background 0.2s ease',
-  _hover: {
-    bg: { base: '#e6fffa', _dark: 'rgba(129, 230, 217, 0.18)' },
-    transform: 'translateY(-1px)'
+const education = [
+  {
+    title: 'YCCE, Nagpur',
+    description: 'B.E. in Electronics and Telecommunications',
+    meta: '2017 – 2021',
+    logo: '/images/ycce.jpg'
   }
+]
+
+const certifications = [
+  {
+    title: 'AWS Certified Developer – Associate',
+    meta: 'Valid through June 2027'
+  }
+]
+
+const socials = [
+  {
+    label: 'GitHub',
+    icon: IoLogoGithub,
+    href: 'https://github.com/RUZ4KI'
+  },
+  {
+    label: 'LinkedIn',
+    icon: IoLogoLinkedin,
+    href: 'https://www.linkedin.com/in/rushikesh-kate-253b9018b'
+  },
+  {
+    label: 'Twitter',
+    icon: IoLogoTwitter,
+    href: 'https://twitter.com/Rushikesh_23'
+  }
+]
+
+const sectionLabelStyles = {
+  as: 'h2',
+  color: accentColor,
+  fontSize: '12px',
+  fontWeight: 700,
+  letterSpacing: '0.12em',
+  lineHeight: 1.4,
+  textTransform: 'uppercase'
 }
 
-const socialButtonStyles = {
-  variant: 'ghost',
-  justifyContent: 'flex-start',
-  color: { base: '#319795', _dark: '#81e6d9' },
-  borderRadius: '6px',
-  fontSize: '16px',
-  fontWeight: 600,
-  lineHeight: '19.2px',
-  _icon: { width: '1em', height: '1em' },
-  _hover: { bg: { base: '#e6fffa', _dark: 'rgba(129, 230, 217, 0.12)' } }
+const Page = () => {
+  const shouldReduceMotion = useReducedMotion()
+  const { scrollY } = useScroll()
+  const portraitY = useTransform(scrollY, [0, 700], [0, 30])
+
+  return (
+    <Layout>
+      <Box>
+        <Box
+          as="section"
+          minH="calc(100svh - 80px)"
+          display="grid"
+          gridTemplateAreas={{
+            base: '"eyebrow" "name" "portrait" "copy" "action"',
+            md: '"eyebrow portrait" "name portrait" "copy portrait" "action portrait"'
+          }}
+          gridTemplateColumns={{ base: '1fr', md: 'minmax(0, 1fr) 320px' }}
+          gridTemplateRows={{
+            base: 'auto auto auto auto auto',
+            md: 'auto auto auto auto'
+          }}
+          alignContent="center"
+          alignItems="center"
+          columnGap={{ md: 14 }}
+          rowGap={{ base: 5, md: 6 }}
+          py={{ base: 4, md: 8 }}
+        >
+          <motion.div
+            variants={heroItem}
+            custom={0}
+            initial="hidden"
+            animate="visible"
+            style={{ gridArea: 'eyebrow' }}
+          >
+            <Text
+              color={mutedColor}
+              fontSize="12px"
+              fontWeight={700}
+              letterSpacing="0.12em"
+              textTransform="uppercase"
+            >
+              Namaskar · Full-stack developer · India
+            </Text>
+          </motion.div>
+
+          <motion.div
+            variants={heroItem}
+            custom={1}
+            initial="hidden"
+            animate="visible"
+            style={{ gridArea: 'name' }}
+          >
+            <Heading
+              as="h1"
+              maxW="9ch"
+              fontSize={{ base: '46px', md: '76px' }}
+              fontWeight={700}
+              letterSpacing="-0.035em"
+              lineHeight={{ base: 1.04, md: 0.98 }}
+            >
+              Rushikesh Kate
+            </Heading>
+          </motion.div>
+
+          <motion.div
+            variants={heroItem}
+            custom={2}
+            initial="hidden"
+            animate="visible"
+            style={{
+              gridArea: 'portrait',
+              y: shouldReduceMotion ? 0 : portraitY
+            }}
+          >
+            <Box
+              overflow="hidden"
+              width="100%"
+              maxW={{ base: '100%', md: '320px' }}
+              aspectRatio={{ base: '16 / 10', md: '3 / 4' }}
+              borderRadius={{ base: '18px', md: '24px' }}
+              bg={{ base: 'blackAlpha.200', _dark: 'whiteAlpha.100' }}
+            >
+              <Image
+                src="/images/rushikesh.jpg"
+                alt="Rushikesh Kate standing in a forest"
+                width="100%"
+                height="100%"
+                objectFit="cover"
+                objectPosition="center 38%"
+              />
+            </Box>
+          </motion.div>
+
+          <motion.div
+            variants={heroItem}
+            custom={3}
+            initial="hidden"
+            animate="visible"
+            style={{ gridArea: 'copy' }}
+          >
+            <Text
+              maxW="30ch"
+              fontSize={{ base: '23px', md: '31px' }}
+              fontWeight={700}
+              lineHeight={{ base: 1.35, md: 1.28 }}
+            >
+              I build dependable web and mobile products from interface to
+              infrastructure.
+            </Text>
+            <Text mt={3} maxW="48ch" color={mutedColor} lineHeight={1.65}>
+              Senior Full-Stack Developer at Reveal HealthTech, working on
+              healthcare products for patients and care teams.
+            </Text>
+          </motion.div>
+
+          <motion.div
+            variants={heroItem}
+            custom={4}
+            initial="hidden"
+            animate="visible"
+            style={{ gridArea: 'action' }}
+          >
+            <Link
+              as={NextLink}
+              href="/works"
+              display="inline-flex"
+              alignItems="center"
+              gap={2}
+              minH="44px"
+              color={accentColor}
+              fontWeight={700}
+              borderBottom="2px solid"
+              borderColor={accentColor}
+              _hover={{ opacity: 0.72 }}
+              _focusVisible={{ outline: '2px solid', outlineOffset: '4px' }}
+            >
+              Explore my work <Icon as={FiArrowUpRight} />
+            </Link>
+          </motion.div>
+        </Box>
+
+        <Section
+          display="grid"
+          gridTemplateColumns={{ base: '1fr', md: '180px minmax(0, 1fr)' }}
+          gap={{ base: 5, md: 10 }}
+          py={{ base: 12, md: 18 }}
+          borderTop="1px solid"
+          borderColor={hairline}
+        >
+          <Heading {...sectionLabelStyles}>Experience</Heading>
+          <Box>
+            <Heading
+              as="h3"
+              maxW="18ch"
+              fontSize={{ base: '30px', md: '40px' }}
+              lineHeight={1.15}
+              mb={5}
+            >
+              Building clearly across the stack.
+            </Heading>
+            <Text maxW="58ch" color={mutedColor} lineHeight={1.7} mb={10}>
+              I turn complex workflows into focused products across interfaces,
+              APIs, data systems, cloud infrastructure, and production releases.
+              Outside work, I enjoy cardistry, anime, and robotics.
+            </Text>
+
+            <BioEntry>
+              <Flex align="flex-start" gap={4}>
+                <Image
+                  src="/images/reveal-healthtech.jpg"
+                  alt="Reveal HealthTech logo"
+                  boxSize="48px"
+                  borderRadius="10px"
+                  objectFit="cover"
+                  flexShrink={0}
+                />
+                <Box>
+                  <BioEntryTitle as="h4">Reveal HealthTech</BioEntryTitle>
+                  <Text
+                    color={accentColor}
+                    fontSize="14px"
+                    fontWeight={700}
+                    my={1}
+                  >
+                    Senior Full-Stack Developer
+                  </Text>
+                </Box>
+              </Flex>
+              <BioEntryDate color={mutedColor}>
+                Jul 2023 – Present · 3 yrs 2 mos
+              </BioEntryDate>
+              <BioEntryDescription color={mutedColor} gridColumn="1" ml="64px">
+                Building scheduling and care-management products across web and
+                mobile for 1.3M+ patients.
+              </BioEntryDescription>
+            </BioEntry>
+            <BioEntry>
+              <Flex align="flex-start" gap={4}>
+                <Image
+                  src="/images/keepworks.jpg"
+                  alt="KeepWorks logo"
+                  boxSize="48px"
+                  borderRadius="10px"
+                  objectFit="cover"
+                  flexShrink={0}
+                />
+                <Box>
+                  <BioEntryTitle as="h4">KeepWorks</BioEntryTitle>
+                  <Text
+                    color={accentColor}
+                    fontSize="14px"
+                    fontWeight={700}
+                    my={1}
+                  >
+                    Full-Stack Developer
+                  </Text>
+                </Box>
+              </Flex>
+              <BioEntryDate color={mutedColor}>
+                Sep 2021 – Jul 2023 · 1 yr 11 mos
+              </BioEntryDate>
+              <BioEntryDescription color={mutedColor} gridColumn="1" ml="64px">
+                Delivered client web and mobile products with React, Next.js,
+                React Native, GraphQL, NestJS, and PostgreSQL.
+              </BioEntryDescription>
+            </BioEntry>
+            <BioEntry>
+              <Flex align="flex-start" gap={4}>
+                <Image
+                  src="/images/newton-school.jpg"
+                  alt="Newton School logo"
+                  boxSize="48px"
+                  borderRadius="10px"
+                  objectFit="cover"
+                  flexShrink={0}
+                />
+                <Box>
+                  <BioEntryTitle as="h4">Newton School</BioEntryTitle>
+                  <Text
+                    color={accentColor}
+                    fontSize="14px"
+                    fontWeight={700}
+                    my={1}
+                  >
+                    Full Stack Web Development Intern
+                  </Text>
+                </Box>
+              </Flex>
+              <BioEntryDate color={mutedColor}>
+                Apr 2021 – Sep 2021 · 6 mos
+              </BioEntryDate>
+              <BioEntryDescription color={mutedColor} gridColumn="1" ml="64px">
+                Full-stack web development internship.
+              </BioEntryDescription>
+            </BioEntry>
+          </Box>
+        </Section>
+
+        <Section
+          display="grid"
+          gridTemplateColumns={{ base: '1fr', md: '180px minmax(0, 1fr)' }}
+          gap={{ base: 5, md: 10 }}
+          py={{ base: 12, md: 18 }}
+          borderTop="1px solid"
+          borderColor={hairline}
+        >
+          <Heading {...sectionLabelStyles}>Skills</Heading>
+          <Box
+            as="ul"
+            listStyleType="none"
+            p={0}
+            m={0}
+            display="flex"
+            flexWrap="wrap"
+            gap={2}
+            alignContent="flex-start"
+          >
+            {skills.map(skill => (
+              <Box
+                as="li"
+                key={skill}
+                px={3}
+                py={2}
+                bg={{ base: '#1a202c', _dark: '#f4f4f2' }}
+                color={{ base: '#ffffff', _dark: '#1a202c' }}
+                borderRadius="8px"
+                fontSize="14px"
+                fontWeight={700}
+                lineHeight="20px"
+              >
+                {skill}
+              </Box>
+            ))}
+          </Box>
+        </Section>
+
+        <Section
+          display="grid"
+          gridTemplateColumns={{ base: '1fr', md: '180px minmax(0, 1fr)' }}
+          gap={{ base: 5, md: 10 }}
+          py={{ base: 12, md: 18 }}
+          borderTop="1px solid"
+          borderColor={hairline}
+        >
+          <Heading {...sectionLabelStyles}>Education</Heading>
+          <Box>
+            {education.map(item => (
+              <Box
+                key={item.title}
+                display={{ md: 'grid' }}
+                gridTemplateColumns="minmax(0, 1fr) auto"
+                gap={6}
+                py={2}
+                borderBottom="1px solid"
+                borderColor={hairline}
+              >
+                <Flex align="flex-start" gap={4}>
+                  <Image
+                    src={item.logo}
+                    alt="YCCE logo"
+                    boxSize="48px"
+                    borderRadius="10px"
+                    objectFit="cover"
+                    flexShrink={0}
+                  />
+                  <Box>
+                    <Heading as="h3" fontSize="19px" lineHeight={1.4}>
+                      {item.title}
+                    </Heading>
+                    <Text mt={1} color={mutedColor} lineHeight={1.6}>
+                      {item.description}
+                    </Text>
+                  </Box>
+                </Flex>
+                <Text
+                  mt={{ base: 2, md: 0 }}
+                  flexShrink={0}
+                  color={mutedColor}
+                  fontSize="14px"
+                >
+                  {item.meta}
+                </Text>
+              </Box>
+            ))}
+          </Box>
+        </Section>
+
+        <Section
+          display="grid"
+          gridTemplateColumns={{ base: '1fr', md: '180px minmax(0, 1fr)' }}
+          gap={{ base: 5, md: 10 }}
+          py={{ base: 12, md: 18 }}
+          borderTop="1px solid"
+          borderColor={hairline}
+        >
+          <Heading {...sectionLabelStyles}>Certifications</Heading>
+          <Box>
+            {certifications.map(certification => (
+              <Box
+                key={certification.title}
+                display={{ md: 'flex' }}
+                alignItems="baseline"
+                justifyContent="space-between"
+                gap={6}
+                py={4}
+                borderBottom="1px solid"
+                borderColor={hairline}
+              >
+                <Text fontWeight={700}>{certification.title}</Text>
+                <Text
+                  mt={{ base: 1, md: 0 }}
+                  flexShrink={0}
+                  color={mutedColor}
+                  fontSize="14px"
+                >
+                  {certification.meta}
+                </Text>
+              </Box>
+            ))}
+          </Box>
+        </Section>
+
+        <Section
+          py={{ base: 14, md: 20 }}
+          borderTop="1px solid"
+          borderColor={hairline}
+          mb={0}
+        >
+          <Text {...sectionLabelStyles} as="p">
+            Let&apos;s talk
+          </Text>
+          <Heading
+            as="h2"
+            mt={4}
+            maxW="18ch"
+            fontSize={{ base: '38px', md: '56px' }}
+            letterSpacing="-0.025em"
+            lineHeight={1.05}
+          >
+            Building something ambitious? Let’s talk
+          </Heading>
+          <List.Root
+            listStyleType="none"
+            p={0}
+            m={0}
+            mt={8}
+            display="flex"
+            flexWrap="wrap"
+            gap={{ base: 5, md: 7 }}
+          >
+            {socials.map(social => (
+              <List.Item key={social.label}>
+                <Link
+                  href={social.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  display="inline-flex"
+                  alignItems="center"
+                  gap={2}
+                  minH="44px"
+                  color={accentColor}
+                  fontWeight={700}
+                  _hover={{ opacity: 0.72 }}
+                  _focusVisible={{ outline: '2px solid', outlineOffset: '4px' }}
+                >
+                  <Icon as={social.icon} />
+                  {social.label}
+                </Link>
+              </List.Item>
+            ))}
+          </List.Root>
+          <Text mt={{ base: 10, md: 14 }} fontSize="sm" color={mutedColor}>
+            © {new Date().getFullYear()} Rushikesh Kate
+          </Text>
+        </Section>
+      </Box>
+    </Layout>
+  )
 }
 
 export default Page
