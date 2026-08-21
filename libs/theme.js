@@ -13,7 +13,7 @@ const config = defineConfig({
         grassTeal: { value: '#88ccca' }
       },
       fonts: {
-        heading: { value: "'M PLUS Rounded 1c'" }
+        heading: { value: 'var(--font-m-plus-rounded)' }
       }
     }
   }

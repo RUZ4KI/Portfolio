@@ -3,7 +3,6 @@ import {
   Flex,
   Heading,
   Icon,
-  Image,
   Link,
   List,
   Text
@@ -14,9 +13,15 @@ import {
   useScroll,
   useTransform
 } from 'framer-motion'
+import Image from 'next/image'
 import NextLink from 'next/link'
 import { FiArrowUpRight } from 'react-icons/fi'
 import { IoLogoGithub, IoLogoLinkedin, IoLogoTwitter } from 'react-icons/io5'
+import heroPortrait from '../public/images/rushikesh.webp'
+import keepworksLogo from '../public/images/keepworks.webp'
+import newtonSchoolLogo from '../public/images/newton-school.webp'
+import revealHealthtechLogo from '../public/images/reveal-healthtech.webp'
+import ycceLogo from '../public/images/ycce.webp'
 import {
   BioEntry,
   BioEntryDate,
@@ -68,7 +73,7 @@ const education = [
     title: 'YCCE, Nagpur',
     description: 'B.E. in Electronics and Telecommunications',
     meta: '2017 – 2021',
-    logo: '/images/ycce.jpg'
+    logo: ycceLogo
   }
 ]
 
@@ -186,16 +191,17 @@ const Page = () => {
               width="100%"
               maxW={{ base: '100%', md: '320px' }}
               aspectRatio={{ base: '16 / 10', md: '3 / 4' }}
+              position="relative"
               borderRadius={{ base: '18px', md: '24px' }}
               bg={{ base: 'blackAlpha.200', _dark: 'whiteAlpha.100' }}
             >
               <Image
-                src="/images/rushikesh.jpg"
+                src={heroPortrait}
                 alt="Rushikesh Kate standing in a forest"
-                width="100%"
-                height="100%"
-                objectFit="cover"
-                objectPosition="center 38%"
+                fill
+                preload
+                sizes="(max-width: 767px) calc(100vw - 32px), 320px"
+                style={{ objectFit: 'cover', objectPosition: 'center 38%' }}
               />
             </Box>
           </motion.div>
@@ -276,12 +282,15 @@ const Page = () => {
             <BioEntry>
               <Flex align="flex-start" gap={4}>
                 <Image
-                  src="/images/reveal-healthtech.jpg"
+                  src={revealHealthtechLogo}
                   alt="Reveal HealthTech logo"
-                  boxSize="48px"
-                  borderRadius="10px"
-                  objectFit="cover"
-                  flexShrink={0}
+                  width={48}
+                  height={48}
+                  style={{
+                    borderRadius: '10px',
+                    objectFit: 'cover',
+                    flexShrink: 0
+                  }}
                 />
                 <Box>
                   <BioEntryTitle as="h4">Reveal HealthTech</BioEntryTitle>
@@ -306,12 +315,15 @@ const Page = () => {
             <BioEntry>
               <Flex align="flex-start" gap={4}>
                 <Image
-                  src="/images/keepworks.jpg"
+                  src={keepworksLogo}
                   alt="KeepWorks logo"
-                  boxSize="48px"
-                  borderRadius="10px"
-                  objectFit="cover"
-                  flexShrink={0}
+                  width={48}
+                  height={48}
+                  style={{
+                    borderRadius: '10px',
+                    objectFit: 'cover',
+                    flexShrink: 0
+                  }}
                 />
                 <Box>
                   <BioEntryTitle as="h4">KeepWorks</BioEntryTitle>
@@ -336,12 +348,15 @@ const Page = () => {
             <BioEntry>
               <Flex align="flex-start" gap={4}>
                 <Image
-                  src="/images/newton-school.jpg"
+                  src={newtonSchoolLogo}
                   alt="Newton School logo"
-                  boxSize="48px"
-                  borderRadius="10px"
-                  objectFit="cover"
-                  flexShrink={0}
+                  width={48}
+                  height={48}
+                  style={{
+                    borderRadius: '10px',
+                    objectFit: 'cover',
+                    flexShrink: 0
+                  }}
                 />
                 <Box>
                   <BioEntryTitle as="h4">Newton School</BioEntryTitle>
@@ -427,10 +442,13 @@ const Page = () => {
                   <Image
                     src={item.logo}
                     alt="YCCE logo"
-                    boxSize="48px"
-                    borderRadius="10px"
-                    objectFit="cover"
-                    flexShrink={0}
+                    width={48}
+                    height={48}
+                    style={{
+                      borderRadius: '10px',
+                      objectFit: 'cover',
+                      flexShrink: 0
+                    }}
                   />
                   <Box>
                     <Heading as="h3" fontSize="19px" lineHeight={1.4}>

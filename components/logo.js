@@ -96,7 +96,10 @@ const Logo = () => {
     <Link href="/" scroll={false}>
       <LogoBox>
         <CardFanIcon />
-        <Text fontFamily='M PLUS Rounded 1c", sans-serif' fontWeight="bold">
+        <Text
+          fontFamily="var(--font-m-plus-rounded), sans-serif"
+          fontWeight="bold"
+        >
           Rushikesh Kate
         </Text>
       </LogoBox>

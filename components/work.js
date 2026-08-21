@@ -1,5 +1,6 @@
 import NextLink from 'next/link'
-import { Badge, Box, Heading, Image, Link } from '@chakra-ui/react'
+import Image from 'next/image'
+import { Badge, Box, Heading, Link } from '@chakra-ui/react'
 import { FiChevronRight } from 'react-icons/fi'
 
 export const Title = ({ children }) => (
@@ -29,7 +30,18 @@ export const Title = ({ children }) => (
 )
 
 export const WorkImage = ({ src, alt }) => (
-  <Image borderRadius="lg" w="full" src={src} alt={alt} mb={4} />
+  <Image
+    src={src}
+    alt={alt}
+    placeholder="blur"
+    sizes="(max-width: 640px) calc(100vw - 32px), 576px"
+    style={{
+      width: '100%',
+      height: 'auto',
+      borderRadius: '8px',
+      marginBottom: '16px'
+    }}
+  />
 )
 
 export const Meta = ({ children }) => (

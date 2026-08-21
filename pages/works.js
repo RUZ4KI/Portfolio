@@ -2,9 +2,9 @@ import { Container, Heading, SimpleGrid } from '@chakra-ui/react'
 import { WorkGridItem } from '../components/gridItems'
 import Layout from '../components/layouts/article'
 import Section from '../components/section'
-import covidTracker from '../public/images/covid-tracker.png'
-import movieDatabase from '../public/images/movie-database.png'
-import quoraClone from '../public/images/quora-clone.png'
+import covidTracker from '../public/images/covid-tracker.webp'
+import movieDatabase from '../public/images/movie-database.webp'
+import quoraClone from '../public/images/quora-clone.webp'
 
 const Works = () => {
   return (

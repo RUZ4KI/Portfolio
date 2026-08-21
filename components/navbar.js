@@ -8,7 +8,6 @@ import {
   Stack
 } from '@chakra-ui/react'
 import { FiMenu } from 'react-icons/fi'
-import React from 'react'
 import NextLink from 'next/link'
 import Logo from './logo'
 import ThemeToggleButton from './themeToggleButton'

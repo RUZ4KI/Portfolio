@@ -1,5 +1,6 @@
 import { LuExternalLink } from 'react-icons/lu'
 import { Badge, Container, Link, List } from '@chakra-ui/react'
+import movieDatabase from '../../public/images/movie-database.webp'
 import Layout from '../../components/layouts/article'
 import Paragraph from '../../components/paragraph'
 import { Meta, Title, WorkImage } from '../../components/work'
@@ -32,7 +33,7 @@ const Work = () => {
             <span>TypeScript, React</span>
           </List.Item>
         </List.Root>
-        <WorkImage src="/images/movie-database.png" alt="Movie Database" />
+        <WorkImage src={movieDatabase} alt="Movie Database" />
       </Container>
     </Layout>
   )

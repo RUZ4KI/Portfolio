@@ -1,5 +1,6 @@
 import { LuExternalLink } from 'react-icons/lu'
 import { Badge, Container, Link, List } from '@chakra-ui/react'
+import quoraClone from '../../public/images/quora-clone.webp'
 import Layout from '../../components/layouts/article'
 import Paragraph from '../../components/paragraph'
 import { Meta, Title, WorkImage } from '../../components/work'
@@ -29,7 +30,7 @@ const Work = () => {
             <span>React</span>
           </List.Item>
         </List.Root>
-        <WorkImage src="/images/quora-clone.png" alt="Quora Clone" />
+        <WorkImage src={quoraClone} alt="Quora Clone" />
       </Container>
     </Layout>
   )
