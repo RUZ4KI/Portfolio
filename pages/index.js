@@ -27,7 +27,7 @@ const Page = () => {
           mt={16}
           textAlign="center"
         >
-          Namaste, I&apos;m a full-stack developer based in India!
+          Namaste, I&apos;m a full-stack web and mobile developer based in India!
         </Box>
 
         <Box display={{ md: 'flex' }}>
@@ -40,7 +40,7 @@ const Page = () => {
             >
               Rushikesh Kate
             </Heading>
-            <p>Digital Builder (Artist / Developer / Designer)</p>
+            <p>Full-Stack Web &amp; Mobile Developer</p>
           </Box>
           <Box
             flexShrink={0}
@@ -68,10 +68,11 @@ const Page = () => {
             Work
           </Heading>
           <Paragraph>
-            Rushikesh Kate is an energetic and creative person looking for a
-            challenging role in a reputable organization to utilize his
-            technical and management skills to contribute towards the growth of
-            the organization and along the way enhance his knowledge .
+            I build production-ready web and mobile products across the stack,
+            from React and React Native interfaces to backend APIs, databases,
+            cloud infrastructure, and release pipelines. I currently work at
+            Reveal Healthtech, building healthcare products that make complex
+            workflows simpler for patients, care teams, and health coaches.
           </Paragraph>
           <Box textAlign="center" my={4}>
             <Button
@@ -107,9 +108,25 @@ const Page = () => {
             Completed the Bachelor&apos;s of Engineering from YCCE Nagpur
           </BioSection>
           <BioSection>
-            <BioYear>2021 to present</BioYear>
-            Working at KeepWorks
+            <BioYear>Sep 2021 – Jul 2023</BioYear>
+            Full-Stack Developer at KeepWorks
           </BioSection>
+          <BioSection>
+            <BioYear>Jul 2023 – Present</BioYear>
+            Senior Full-Stack Developer at Reveal Healthtech
+          </BioSection>
+        </Section>
+        <Section delay={0.25}>
+          <Heading as="h3" {...sectionTitleStyles}>
+            Skills
+          </Heading>
+          <Box display="flex" flexWrap="wrap" gap={2}>
+            {skills.map(skill => (
+              <Box key={skill} as="span" {...skillTagStyles}>
+                {skill}
+              </Box>
+            ))}
+          </Box>
         </Section>
         <Section delay={0.3}>
           <Heading as="h3" {...sectionTitleStyles}>
@@ -171,6 +188,42 @@ const sectionTitleStyles = {
   textDecorationThickness: '4px',
   mt: 3,
   mb: 4
+}
+
+const skills = [
+  'JavaScript',
+  'TypeScript',
+  'React',
+  'Next.js',
+  'React Native',
+  'FastAPI',
+  'NestJS',
+  'GraphQL',
+  'REST APIs',
+  'Prisma',
+  'PostgreSQL',
+  'MongoDB',
+  'AWS',
+  'Azure',
+  'Docker',
+  'Terraform',
+  'Cypress'
+]
+
+const skillTagStyles = {
+  bg: { base: 'whiteAlpha.800', _dark: 'whiteAlpha.200' },
+  color: { base: '#1a202c', _dark: 'rgba(255, 255, 255, 0.92)' },
+  borderRadius: '10px',
+  px: 3,
+  py: 1.5,
+  fontSize: '15px',
+  fontWeight: 600,
+  lineHeight: '20px',
+  transition: 'transform 0.2s ease, background 0.2s ease',
+  _hover: {
+    bg: { base: '#e6fffa', _dark: 'rgba(129, 230, 217, 0.18)' },
+    transform: 'translateY(-1px)'
+  }
 }
 
 const socialButtonStyles = {
