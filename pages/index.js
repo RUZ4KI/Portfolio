@@ -219,7 +219,7 @@ const Page = () => {
               fontWeight={700}
               lineHeight={{ base: 1.35, md: 1.28 }}
             >
-              I build dependable web and mobile products from interface to
+              I build scalable web and mobile products from interface to
               infrastructure.
             </Text>
             <Text mt={3} maxW="48ch" color={mutedColor} lineHeight={1.65}>
@@ -271,7 +271,7 @@ const Page = () => {
               lineHeight={1.15}
               mb={5}
             >
-              Building clearly across the stack.
+              From zero to shipped. Many times over.
             </Heading>
             <Text maxW="58ch" color={mutedColor} lineHeight={1.7} mb={10}>
               I turn complex workflows into focused products across interfaces,
