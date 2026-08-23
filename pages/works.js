@@ -4,7 +4,7 @@ import Layout from '../components/layouts/article'
 import Section from '../components/section'
 import covidTracker from '../public/images/covid-tracker.webp'
 import movieDatabase from '../public/images/movie-database.webp'
-import quoraClone from '../public/images/quora-clone.webp'
+import sarathi from '../public/images/sarathi.webp'
 
 const Works = () => {
   return (
@@ -43,11 +43,11 @@ const Works = () => {
           </Section>
           <Section>
             <WorkGridItem
-              id="quora-clone"
-              title="Quora Clone"
-              thumbnail={quoraClone}
+              id="sarathi"
+              title="Sarathi"
+              thumbnail={sarathi}
             >
-              A quora clone.
+              A small, inspectable coding agent for your terminal.
             </WorkGridItem>
           </Section>
         </SimpleGrid>
