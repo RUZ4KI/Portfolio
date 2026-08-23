@@ -23,6 +23,15 @@ const Works = () => {
         <SimpleGrid columns={[1, 1, 2]} gap={6}>
           <Section>
             <WorkGridItem
+              id="sarathi"
+              title="Sarathi"
+              thumbnail={sarathi}
+            >
+              A small, inspectable coding agent for your terminal.
+            </WorkGridItem>
+          </Section>
+          <Section>
+            <WorkGridItem
               id="movie"
               title="Movie Database"
               thumbnail={movieDatabase}
@@ -39,15 +48,6 @@ const Works = () => {
             >
               A covid tracker site that allows you to moniter data of various
               countries.
-            </WorkGridItem>
-          </Section>
-          <Section>
-            <WorkGridItem
-              id="sarathi"
-              title="Sarathi"
-              thumbnail={sarathi}
-            >
-              A small, inspectable coding agent for your terminal.
             </WorkGridItem>
           </Section>
         </SimpleGrid>

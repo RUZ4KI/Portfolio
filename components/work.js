@@ -1,32 +1,37 @@
 import NextLink from 'next/link'
 import Image from 'next/image'
-import { Badge, Box, Heading, Link } from '@chakra-ui/react'
+import { Badge, Box, Flex, Heading, Link } from '@chakra-ui/react'
 import { FiChevronRight } from 'react-icons/fi'
 
 export const Title = ({ children }) => (
-  <Box>
+  <Flex align="center" flexWrap="wrap" gap={2} mb={4}>
     <Link
       asChild
       color={{ base: '#3d7aed', _dark: '#ff63c3' }}
+      fontSize={14}
+      fontWeight={500}
+      lineHeight="short"
       textUnderlineOffset="3px"
     >
       <NextLink href="/works">Works</NextLink>
     </Link>
-    <span>
-      {' '}
-      <FiChevronRight />{' '}
-    </span>
+    <Box color="fg.muted" display="flex" flexShrink={0} aria-hidden="true">
+      <FiChevronRight />
+    </Box>
     <Heading
-      display="inline-block"
+      alignItems="center"
       as="h3"
+      display="flex"
+      flexWrap="wrap"
       fontSize={20}
       fontWeight={700}
+      gap={2}
       lineHeight={{ base: '26.6px', md: '24px' }}
-      mb={4}
+      m={0}
     >
       {children}
     </Heading>
-  </Box>
+  </Flex>
 )
 
 export const WorkImage = ({ src, alt }) => (
