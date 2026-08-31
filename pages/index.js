@@ -1,12 +1,4 @@
-import {
-  Box,
-  Flex,
-  Heading,
-  Icon,
-  Link,
-  List,
-  Text
-} from '@chakra-ui/react'
+import { Box, Flex, Heading, Icon, Link, List, Text } from '@chakra-ui/react'
 import {
   motion,
   useReducedMotion,
@@ -153,7 +145,7 @@ const Page = () => {
               letterSpacing="0.12em"
               textTransform="uppercase"
             >
-              Namaskar · Full-stack developer · India
+              Namaste · Full-stack developer · India
             </Text>
           </motion.div>
 
