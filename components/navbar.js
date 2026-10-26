@@ -14,7 +14,7 @@ import ThemeToggleButton from './themeToggleButton'
 import { IoLogoGithub } from 'react-icons/io5'
 
 const LinkItem = ({ href, path, target, children, ...props }) => {
-  const active = path === href
+  const active = path.split('?')[0] === href
   return (
     <Link
       asChild
@@ -75,6 +75,9 @@ const Navbar = props => {
           <LinkItem href="/works" path={path}>
             Works
           </LinkItem>
+          <LinkItem href="/ascii-art" path={path}>
+            ASCII Art
+          </LinkItem>
           <LinkItem
             target="_blank"
             href="https://github.com/RUZ4KI"
@@ -111,6 +114,9 @@ const Navbar = props => {
                   </Menu.Item>
                   <Menu.Item value="works" asChild>
                     <NextLink href="/works">Works</NextLink>
+                  </Menu.Item>
+                  <Menu.Item value="ascii-art" asChild>
+                    <NextLink href="/ascii-art">ASCII Art</NextLink>
                   </Menu.Item>
                   <Menu.Item value="github" asChild>
                     <NextLink href="https://github.com/RUZ4KI" target="_blank">
