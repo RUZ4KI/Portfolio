@@ -1,13 +1,13 @@
 import { FULL_TURN } from '../constants'
 
 export const lattooInfo = {
-  name: 'Lattoo',
   caption: 'Settle in. Let the afternoon spin by',
   hint: 'Click near a lattoo to give it another turn.',
   description:
     'Three turned wooden spinning tops, with lacquer rings, revolving woodgrain and ivory inlays, balance on their pins. They precess, wander and gently borrow each other’s orbit.',
   announcement:
-    'The nearest lattoo gathers speed and straightens on its wooden pin.'
+    'The nearest lattoo gathers speed and straightens on its wooden pin.',
+  missed: 'Nothing close enough to spin. Click nearer a lattoo.'
 }
 
 const CAMERA_UP = 0.8351646544
@@ -175,7 +175,7 @@ export class LattooScene {
       !Number.isFinite(this.pointer.horizontal) ||
       !Number.isFinite(this.pointer.vertical)
     )
-      return
+      return false
     let nearest = null
     let nearestDistance = 150 * 150
     for (const top of this.tops) {
@@ -187,13 +187,14 @@ export class LattooScene {
         nearest = top
       }
     }
-    if (!nearest) return
+    if (!nearest) return false
     nearest.boost = Math.min(1.5, nearest.boost + 1)
     nearest.velocityX += Math.max(
       -12,
       Math.min(12, (nearest.horizontal - this.pointer.horizontal) * 0.16)
     )
     nearest.velocityY += 3
+    return true
   }
 
   sample(horizontal, vertical) {

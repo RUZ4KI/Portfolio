@@ -8,20 +8,32 @@ import {
 } from '@chakra-ui/react'
 import { useTheme } from 'next-themes'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useState, useSyncExternalStore } from 'react'
 import { FiPause, FiPlay, FiRotateCcw } from 'react-icons/fi'
 import { artworks, getArtwork } from '../../libs/ascii-art/artworks'
+import { VIEW_HEIGHT, VIEW_WIDTH } from '../../libs/ascii-art/constants'
 import AsciiCanvas from './canvas'
 import useReducedMotionPreference from './use-reduced-motion'
 
 const mutedColor = { base: '#525252', _dark: 'rgba(255, 255, 255, 0.68)' }
 const hairline = { base: 'blackAlpha.300', _dark: 'whiteAlpha.200' }
 
+const subscribeNever = () => () => {}
+const useHydrated = () =>
+  useSyncExternalStore(
+    subscribeNever,
+    () => true,
+    () => false
+  )
+
 const AsciiGallery = () => {
   const router = useRouter()
   const { resolvedTheme } = useTheme()
   const reducedMotion = useReducedMotionPreference()
   const artwork = getArtwork(router.query.scene)
+  const hydrated = useHydrated()
+  const selectedId = hydrated && router.isReady ? artwork.id : null
+  const ready = selectedId !== null && resolvedTheme !== undefined
   const [paused, setPaused] = useState(false)
   const [slow, setSlow] = useState(false)
   const [replay, setReplay] = useState(0)
@@ -91,15 +103,15 @@ const AsciiGallery = () => {
           <Button
             key={item.id}
             size="sm"
-            variant={item.id === artwork.id ? 'solid' : 'outline'}
-            bg={item.id === artwork.id ? 'grassTeal' : 'transparent'}
-            color={item.id === artwork.id ? '#202023' : undefined}
+            variant={item.id === selectedId ? 'solid' : 'outline'}
+            bg={item.id === selectedId ? 'grassTeal' : 'transparent'}
+            color={item.id === selectedId ? '#202023' : undefined}
             borderColor={hairline}
-            aria-pressed={item.id === artwork.id}
+            aria-pressed={item.id === selectedId}
             onClick={() => selectArtwork(item)}
           >
             <Box as="span" opacity={0.6} fontSize="xs">
-              0{index + 1}
+              {String(index + 1).padStart(2, '0')}
             </Box>
             {item.label}
           </Button>
@@ -107,15 +119,19 @@ const AsciiGallery = () => {
       </Flex>
 
       <Box borderTopWidth="1px" borderBottomWidth="1px" borderColor={hairline}>
-        <AsciiCanvas
-          artwork={artwork}
-          replay={replay}
-          paused={paused}
-          reducedMotion={reducedMotion}
-          darkMode={resolvedTheme === 'dark'}
-          playbackRate={slow ? 0.5 : 1}
-          onInteract={setAnnouncement}
-        />
+        {ready ? (
+          <AsciiCanvas
+            artwork={artwork}
+            replay={replay}
+            paused={paused}
+            reducedMotion={reducedMotion}
+            darkMode={resolvedTheme === 'dark'}
+            playbackRate={slow ? 0.5 : 1}
+            onInteract={setAnnouncement}
+          />
+        ) : (
+          <Box w="full" aspectRatio={`${VIEW_WIDTH} / ${VIEW_HEIGHT}`} />
+        )}
       </Box>
       <Flex justify="space-between" gap={4} flexWrap="wrap" mt={4} mb={5}>
         <Text fontSize="sm" fontStyle="italic" color={mutedColor}>
@@ -156,6 +172,9 @@ const AsciiGallery = () => {
         >
           <FiRotateCcw /> Reset
         </Button>
+        <Text ml="auto" fontSize="xs" color={mutedColor}>
+          Keys: 1–{artworks.length} choose · ←/→ cycle · R reset
+        </Text>
       </Flex>
       <VisuallyHidden role="status" aria-live="polite">
         {announcement}

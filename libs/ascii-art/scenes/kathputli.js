@@ -1,3 +1,4 @@
+import { CELL_WIDTH } from '../constants'
 import { clamp, smooth } from '../math'
 
 const DANCE_DURATION = 4.8
@@ -10,7 +11,6 @@ const POLYGON = 1
 const LIMB = 2
 
 export const kathputliInfo = {
-  name: 'The string duet',
   caption: 'Two kathputlis, one quiet conversation.',
   hint: 'Move gently to lead the strings · click for a synchronized dance',
   description:
@@ -43,6 +43,95 @@ const ink = {
   joint: material('bronze', 'o', 0.55)
 }
 
+const BODICE = [
+  [-17, 19],
+  [17, 19],
+  [20, 36],
+  [11, 60],
+  [-12, 60],
+  [-21, 34]
+]
+const BODICE_SHADE = [
+  [-15, 20],
+  [-7, 19],
+  [9, 58],
+  [2, 59]
+]
+const NECKLINE = [
+  [-16, 18],
+  [-9, 19],
+  [1, 33],
+  [11, 19],
+  [17, 19],
+  [1, 40]
+]
+const WAISTBAND = [
+  [-13, 56],
+  [13, 56],
+  [15, 62],
+  [-14, 62]
+]
+const NOSE = [
+  [5, -10],
+  [11, 2],
+  [5, 3]
+]
+const VEIL = [
+  [-15, -25],
+  [-8, -35],
+  [7, -34],
+  [16, -23],
+  [19, 17],
+  [13, 21],
+  [11, -18],
+  [-9, -20],
+  [-14, 15],
+  [-20, 20]
+]
+const VEIL_BORDER = [
+  [-15, -25],
+  [-8, -30],
+  [9, -29],
+  [16, -23],
+  [12, -18],
+  [-12, -20]
+]
+const TURBAN = [
+  [-14, -17],
+  [-18, -27],
+  [-11, -36],
+  [3, -39],
+  [15, -31],
+  [17, -20],
+  [9, -17]
+]
+const TURBAN_LIGHT = [
+  [-16, -27],
+  [6, -35],
+  [14, -30],
+  [-14, -20]
+]
+const TURBAN_BAND = [
+  [-12, -18],
+  [15, -26],
+  [17, -20],
+  [10, -16]
+]
+const TURBAN_TAIL = [
+  [-13, -23],
+  [-19, -20],
+  [-21, 16],
+  [-15, 24],
+  [-13, 3]
+]
+
+const pair = () => [0, 0]
+const set = (target, horizontal, vertical) => {
+  target[0] = horizontal
+  target[1] = vertical
+  return target
+}
+
 export class KathputliScene {
   constructor() {
     this.time = 0
@@ -55,6 +144,20 @@ export class KathputliScene {
     this.strings = []
     this.shapeCount = 0
     this.stringCount = 0
+    this.pose = { horizontal: 0, vertical: 0, angle: 0, cosine: 1, sine: 0 }
+    this.center = pair()
+    this.joints = {
+      leftShoulder: pair(),
+      rightShoulder: pair(),
+      leftElbow: pair(),
+      rightElbow: pair(),
+      leftHand: pair(),
+      rightHand: pair(),
+      leftTemple: pair(),
+      rightTemple: pair()
+    }
+    this.skirt = Array.from({ length: 9 }, pair)
+    this.hem = Array.from({ length: 6 }, pair)
     this.buildGeometry()
   }
 
@@ -106,20 +209,43 @@ export class KathputliScene {
     return shape
   }
 
-  polygon(points, paint) {
+  place(localX, localY, target) {
+    const pose = this.pose
+    return set(
+      target,
+      pose.horizontal + localX * pose.cosine - localY * pose.sine,
+      pose.vertical + localX * pose.sine + localY * pose.cosine
+    )
+  }
+
+  oval(localX, localY, radiusX, radiusY, paint, tilt = 0) {
+    const center = this.place(localX, localY, this.center)
+    return this.ellipse(
+      center[0],
+      center[1],
+      radiusX,
+      radiusY,
+      this.pose.angle + tilt,
+      paint
+    )
+  }
+
+  poly(points, paint) {
     const shape = this.shape(POLYGON, paint)
     shape.left = shape.top = Infinity
     shape.right = shape.bottom = -Infinity
     shape.vertices.length = points.length
     for (let index = 0; index < points.length; index++) {
       const point = points[index]
-      const vertex = shape.vertices[index] || (shape.vertices[index] = [0, 0])
-      vertex[0] = point[0]
-      vertex[1] = point[1]
-      shape.left = Math.min(shape.left, point[0])
-      shape.right = Math.max(shape.right, point[0])
-      shape.top = Math.min(shape.top, point[1])
-      shape.bottom = Math.max(shape.bottom, point[1])
+      const vertex = this.place(
+        point[0],
+        point[1],
+        shape.vertices[index] || (shape.vertices[index] = pair())
+      )
+      shape.left = Math.min(shape.left, vertex[0])
+      shape.right = Math.max(shape.right, vertex[0])
+      shape.top = Math.min(shape.top, vertex[1])
+      shape.bottom = Math.max(shape.bottom, vertex[1])
     }
     return shape
   }
@@ -139,13 +265,13 @@ export class KathputliScene {
     shape.bottom = Math.max(start[1], end[1]) + width
   }
 
-  thread(start, end) {
+  thread(startX, startY, end) {
     const index = this.stringCount++
     const string = this.strings[index] || (this.strings[index] = {})
-    string.top = start[1]
+    string.top = startY
     string.bottom = end[1]
-    string.horizontal = start[0]
-    string.slope = (end[0] - start[0]) / (end[1] - start[1])
+    string.horizontal = startX
+    string.slope = (end[0] - startX) / (end[1] - startY)
     string.paint = Math.abs(string.slope) > 0.22 ? ink.stringSlant : ink.string
   }
 
@@ -175,141 +301,89 @@ export class KathputliScene {
       this.pull * ((feminine ? 11 : 15) * idle + 13 * dance) +
       dance * beat * 22
     const vertical = 171 + Math.sin(phase * 0.82) * 3 * idle - this.lift * 7
-    const cosine = Math.cos(angle)
-    const sine = Math.sin(angle)
-    const point = (localX, localY) => [
-      horizontal + localX * cosine - localY * sine,
-      vertical + localX * sine + localY * cosine
-    ]
-    const oval = (localX, localY, radiusX, radiusY, paint, tilt = 0) => {
-      const center = point(localX, localY)
-      return this.ellipse(
-        center[0],
-        center[1],
-        radiusX,
-        radiusY,
-        angle + tilt,
-        paint
-      )
-    }
-    const poly = (points, paint) =>
-      this.polygon(
-        points.map(vertex => point(vertex[0], vertex[1])),
-        paint
-      )
+    const pose = this.pose
+    pose.horizontal = horizontal
+    pose.vertical = vertical
+    pose.angle = angle
+    pose.cosine = Math.cos(angle)
+    pose.sine = Math.sin(angle)
+    const joints = this.joints
     const fabric = feminine ? ink.rustLight : ink.blue
     const fabricShade = feminine ? ink.rust : ink.blueLight
     const lag =
       Math.sin(phase - 0.8) * 5 * idle -
       this.pull * 5 -
       dance * Math.sin(performanceTime * DANCE_FREQUENCY - 0.8) * 13
-    const leftShoulder = point(-17, 20)
-    const rightShoulder = point(17, 20)
+    const leftShoulder = this.place(-17, 20, joints.leftShoulder)
+    const rightShoulder = this.place(17, 20, joints.rightShoulder)
     const leftElbowX = -35 - gesture * 4 - dance * 8
     const leftElbowY = 42 - dance * 15
     const rightElbowX = 33 + gesture * 4 + dance * 8
     const rightElbowY = 37 - dance * 10
-    const leftElbow = point(leftElbowX, leftElbowY)
-    const rightElbow = point(rightElbowX, rightElbowY)
+    const leftElbow = this.place(leftElbowX, leftElbowY, joints.leftElbow)
+    const rightElbow = this.place(rightElbowX, rightElbowY, joints.rightElbow)
     const forearmAngle = beat * 0.95
     const forearmX = Math.cos(forearmAngle) * FOREARM_LENGTH
     const forearmY = Math.sin(forearmAngle) * FOREARM_LENGTH
-    const leftHand = point(
+    const leftHand = this.place(
       leftElbowX + (-10 - gesture) * idle - forearmX * dance,
-      leftElbowY + (-15 - gesture * 7) * idle - forearmY * dance
+      leftElbowY + (-15 - gesture * 7) * idle - forearmY * dance,
+      joints.leftHand
     )
-    const rightHand = point(
+    const rightHand = this.place(
       rightElbowX + 15 * idle + forearmX * dance,
-      rightElbowY + (-20 + gesture * 10) * idle + forearmY * dance
+      rightElbowY + (-20 + gesture * 10) * idle + forearmY * dance,
+      joints.rightHand
     )
     const controlX = horizontal + this.pull * 19
     const controlY = 49 - this.lift * 8 + Math.sin(phase * 0.82) * 2
-    this.thread([controlX - 13, controlY], point(-7, -22))
-    this.thread([controlX + 13, controlY + 2], point(7, -22))
-    this.thread([controlX - 27, controlY + 5], leftHand)
-    this.thread([controlX + 27, controlY + 3], rightHand)
+    this.thread(controlX - 13, controlY, this.place(-7, -22, joints.leftTemple))
+    this.thread(
+      controlX + 13,
+      controlY + 2,
+      this.place(7, -22, joints.rightTemple)
+    )
+    this.thread(controlX - 27, controlY + 5, leftHand)
+    this.thread(controlX + 27, controlY + 3, rightHand)
 
     this.limb(leftShoulder, leftElbow, 6, fabricShade)
     this.limb(rightShoulder, rightElbow, 6, fabricShade)
-    oval(0, 13, 7, 12, ink.woodShade)
+    this.oval(0, 13, 7, 12, ink.woodShade)
 
     const hemWidth = (feminine ? 48 : 35) + dance * (8 + beat * 4)
-    const skirt = poly(
-      [
-        [-12, 58],
-        [12, 58],
-        [hemWidth * 0.7 + lag * 0.4, 104],
-        [hemWidth + lag, 129],
-        [hemWidth * 0.5 + lag, 134],
-        [lag, 136],
-        [-hemWidth * 0.55 + lag, 133],
-        [-hemWidth + lag, 127],
-        [-hemWidth * 0.7 + lag * 0.4, 102]
-      ],
-      fabric
-    )
+    const skirtPoints = this.skirt
+    set(skirtPoints[0], -12, 58)
+    set(skirtPoints[1], 12, 58)
+    set(skirtPoints[2], hemWidth * 0.7 + lag * 0.4, 104)
+    set(skirtPoints[3], hemWidth + lag, 129)
+    set(skirtPoints[4], hemWidth * 0.5 + lag, 134)
+    set(skirtPoints[5], lag, 136)
+    set(skirtPoints[6], -hemWidth * 0.55 + lag, 133)
+    set(skirtPoints[7], -hemWidth + lag, 127)
+    set(skirtPoints[8], -hemWidth * 0.7 + lag * 0.4, 102)
+    const skirt = this.poly(skirtPoints, fabric)
     skirt.pattern = true
-    const origin = point(0, 0)
-    skirt.originX = origin[0]
-    skirt.originY = origin[1]
-    skirt.cosine = cosine
-    skirt.sine = sine
+    skirt.originX = horizontal
+    skirt.originY = vertical
+    skirt.cosine = pose.cosine
+    skirt.sine = pose.sine
     skirt.lag = lag
     skirt.feminine = feminine
     skirt.alternate = fabricShade
-    poly(
-      [
-        [-hemWidth + lag, 124],
-        [lag, 130],
-        [hemWidth + lag, 126],
-        [hemWidth + lag, 129],
-        [lag, 136],
-        [-hemWidth + lag, 127]
-      ],
-      ink.gold
-    )
-    poly(
-      [
-        [-17, 19],
-        [17, 19],
-        [20, 36],
-        [11, 60],
-        [-12, 60],
-        [-21, 34]
-      ],
-      feminine ? ink.jade : ink.blue
-    )
-    poly(
-      [
-        [-15, 20],
-        [-7, 19],
-        [9, 58],
-        [2, 59]
-      ],
-      feminine ? ink.jadeShade : ink.blueLight
-    )
-    poly(
-      [
-        [-16, 18],
-        [-9, 19],
-        [1, 33],
-        [11, 19],
-        [17, 19],
-        [1, 40]
-      ],
-      ink.gold
-    )
-    poly(
-      [
-        [-13, 56],
-        [13, 56],
-        [15, 62],
-        [-14, 62]
-      ],
-      ink.gold
-    )
-    oval(1, 42, 2.6, 2.8, ink.goldLight)
-    oval(2, 51, 2.2, 2.2, ink.goldLight)
+    const hem = this.hem
+    set(hem[0], -hemWidth + lag, 124)
+    set(hem[1], lag, 130)
+    set(hem[2], hemWidth + lag, 126)
+    set(hem[3], hemWidth + lag, 129)
+    set(hem[4], lag, 136)
+    set(hem[5], -hemWidth + lag, 127)
+    this.poly(hem, ink.gold)
+    this.poly(BODICE, feminine ? ink.jade : ink.blue)
+    this.poly(BODICE_SHADE, feminine ? ink.jadeShade : ink.blueLight)
+    this.poly(NECKLINE, ink.gold)
+    this.poly(WAISTBAND, ink.gold)
+    this.oval(1, 42, 2.6, 2.8, ink.goldLight)
+    this.oval(2, 51, 2.2, 2.2, ink.goldLight)
 
     this.limb(leftElbow, leftHand, 3.4, ink.wood)
     this.limb(rightElbow, rightHand, 3.4, ink.wood)
@@ -318,102 +392,35 @@ export class KathputliScene {
     this.ellipse(leftHand[0], leftHand[1], 5, 4, angle - 0.5, ink.woodLight)
     this.ellipse(rightHand[0], rightHand[1], 5, 4, angle + 0.5, ink.woodLight)
 
-    oval(-13, -2, 4, 6, ink.woodShade)
-    oval(13, -2, 4, 6, ink.woodShade)
-    oval(0, -5, 13, 19, ink.wood)
-    oval(-3, -7, 8.5, 14, ink.woodLight)
-    poly(
-      [
-        [5, -10],
-        [11, 2],
-        [5, 3]
-      ],
-      ink.woodShade
-    )
-    oval(-6, -8, 3.2, 2.2, ink.ivory)
-    oval(6, -8, 3.2, 2.2, ink.ivory)
-    oval(-5, -8, 1.8, 1.8, ink.eye)
-    oval(7, -8, 1.8, 1.8, ink.eye)
+    this.oval(-13, -2, 4, 6, ink.woodShade)
+    this.oval(13, -2, 4, 6, ink.woodShade)
+    this.oval(0, -5, 13, 19, ink.wood)
+    this.oval(-3, -7, 8.5, 14, ink.woodLight)
+    this.poly(NOSE, ink.woodShade)
+    this.oval(-6, -8, 3.2, 2.2, ink.ivory)
+    this.oval(6, -8, 3.2, 2.2, ink.ivory)
+    this.oval(-5, -8, 1.8, 1.8, ink.eye)
+    this.oval(7, -8, 1.8, 1.8, ink.eye)
     if (feminine) {
-      oval(0, -14, 1.9, 2.4, ink.rust)
-      oval(1, 6, 3.6, 1.8, ink.rust)
-      oval(-15, 4, 2.5, 4.2, ink.gold)
-      oval(15, 4, 2.5, 4.2, ink.gold)
-      poly(
-        [
-          [-15, -25],
-          [-8, -35],
-          [7, -34],
-          [16, -23],
-          [19, 17],
-          [13, 21],
-          [11, -18],
-          [-9, -20],
-          [-14, 15],
-          [-20, 20]
-        ],
-        ink.rust
-      )
-      poly(
-        [
-          [-15, -25],
-          [-8, -30],
-          [9, -29],
-          [16, -23],
-          [12, -18],
-          [-12, -20]
-        ],
-        ink.gold
-      )
-      oval(0, -25, 2.8, 3.5, ink.goldLight)
+      this.oval(0, -14, 1.9, 2.4, ink.rust)
+      this.oval(1, 6, 3.6, 1.8, ink.rust)
+      this.oval(-15, 4, 2.5, 4.2, ink.gold)
+      this.oval(15, 4, 2.5, 4.2, ink.gold)
+      this.poly(VEIL, ink.rust)
+      this.poly(VEIL_BORDER, ink.gold)
+      this.oval(0, -25, 2.8, 3.5, ink.goldLight)
     } else {
-      oval(-4, 4, 5.5, 2.7, ink.dark, -0.2)
-      oval(5, 4, 5.5, 2.7, ink.dark, 0.2)
-      poly(
-        [
-          [-14, -17],
-          [-18, -27],
-          [-11, -36],
-          [3, -39],
-          [15, -31],
-          [17, -20],
-          [9, -17]
-        ],
-        ink.gold
-      )
-      poly(
-        [
-          [-16, -27],
-          [6, -35],
-          [14, -30],
-          [-14, -20]
-        ],
-        ink.goldLight
-      )
-      poly(
-        [
-          [-12, -18],
-          [15, -26],
-          [17, -20],
-          [10, -16]
-        ],
-        ink.rust
-      )
-      poly(
-        [
-          [-13, -23],
-          [-19, -20],
-          [-21, 16],
-          [-15, 24],
-          [-13, 3]
-        ],
-        ink.gold
-      )
-      oval(7, -25, 3, 4, ink.jade)
+      this.oval(-4, 4, 5.5, 2.7, ink.dark, -0.2)
+      this.oval(5, 4, 5.5, 2.7, ink.dark, 0.2)
+      this.poly(TURBAN, ink.gold)
+      this.poly(TURBAN_LIGHT, ink.goldLight)
+      this.poly(TURBAN_BAND, ink.rust)
+      this.poly(TURBAN_TAIL, ink.gold)
+      this.oval(7, -25, 3, 4, ink.jade)
     }
   }
 
-  sample(horizontal, vertical) {
+  sample(horizontal, vertical, cellWidth = CELL_WIDTH) {
     if (horizontal < 240 || horizontal > 720 || vertical < 30 || vertical > 355)
       return null
     for (let index = this.shapeCount - 1; index >= 0; index--) {
@@ -488,6 +495,7 @@ export class KathputliScene {
         return column % 3 === 0 ? shape.alternate : shape.paint
       }
     }
+    const stringReach = Math.max(1.65, cellWidth * 0.33)
     for (let index = 0; index < this.stringCount; index++) {
       const string = this.strings[index]
       if (
@@ -497,7 +505,7 @@ export class KathputliScene {
           horizontal -
             string.horizontal -
             string.slope * (vertical - string.top)
-        ) < 1.65
+        ) < stringReach
       )
         return string.paint
     }

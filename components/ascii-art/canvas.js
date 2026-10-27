@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react'
 import { useEffect, useRef } from 'react'
-import { SCENE_HEIGHT, SCENE_WIDTH } from '../../libs/ascii-art/constants'
+import { VIEW_HEIGHT, VIEW_WIDTH } from '../../libs/ascii-art/constants'
 import { ScenePlayer } from '../../libs/ascii-art/player'
 
 const AsciiCanvas = ({
@@ -34,11 +34,13 @@ const AsciiCanvas = ({
   }, [artwork, replay, paused, reducedMotion, darkMode, playbackRate])
 
   const interact = atCenter => {
-    const played = playerRef.current?.interact(atCenter)
+    const result = playerRef.current?.interact(atCenter)
     onInteract(
-      played
+      result === 'played'
         ? artwork.announcement
-        : 'Motion is paused. The artwork stays still.'
+        : result === 'missed'
+          ? artwork.missed
+          : 'Motion is paused. The artwork stays still.'
     )
   }
 
@@ -46,8 +48,8 @@ const AsciiCanvas = ({
     <Box
       as="canvas"
       ref={canvasRef}
-      width={SCENE_WIDTH}
-      height={SCENE_HEIGHT}
+      width={VIEW_WIDTH}
+      height={VIEW_HEIGHT}
       role="button"
       tabIndex={0}
       aria-label={`${artwork.label}. ${artwork.description}`}
@@ -55,7 +57,7 @@ const AsciiCanvas = ({
       display="block"
       w="full"
       h="auto"
-      aspectRatio={`${SCENE_WIDTH} / ${SCENE_HEIGHT}`}
+      aspectRatio={`${VIEW_WIDTH} / ${VIEW_HEIGHT}`}
       cursor="crosshair"
       touchAction="pan-y"
       _focusVisible={{

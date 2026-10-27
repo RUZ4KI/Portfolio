@@ -1,5 +1,12 @@
 import { clamp } from './math'
-import { CELL_WIDTH, CELL_HEIGHT, SCENE_WIDTH, SCENE_HEIGHT } from './constants'
+import {
+  CELL_HEIGHT,
+  CELL_WIDTH,
+  VIEW_HEIGHT,
+  VIEW_LEFT,
+  VIEW_TOP,
+  VIEW_WIDTH
+} from './constants'
 
 const light = {
   jade: ['#5a937b', '#1d6258', '#a9c2a5'],
@@ -39,11 +46,22 @@ export class CharacterRenderer {
     this.context = canvas.getContext('2d', { alpha: false })
     this.darkMode = darkMode
     this.atlas = new Map()
-    this.ratio = Math.min(window.devicePixelRatio || 1, 2)
-    canvas.width = SCENE_WIDTH * this.ratio
-    canvas.height = SCENE_HEIGHT * this.ratio
-    this.context.scale(this.ratio, this.ratio)
+    this.ratio = null
+    this.scale = null
+  }
+
+  configure(ratio, scale) {
+    if (ratio === this.ratio && scale === this.scale) return false
+    this.ratio = ratio
+    this.scale = scale
+    this.cellWidth = CELL_WIDTH * scale
+    this.cellHeight = CELL_HEIGHT * scale
+    this.canvas.width = VIEW_WIDTH * ratio
+    this.canvas.height = VIEW_HEIGHT * ratio
+    this.context.setTransform(ratio, 0, 0, ratio, 0, 0)
     this.context.imageSmoothingEnabled = false
+    this.atlas.clear()
+    return true
   }
 
   getGlyphTile(material) {
@@ -52,20 +70,24 @@ export class CharacterRenderer {
     const key = `${material.tone}:${material.glyph}:${opacity}:${density}:${this.darkMode}`
     if (this.atlas.has(key)) return this.atlas.get(key)
     const sprite = document.createElement('canvas')
-    sprite.width = CELL_WIDTH * this.ratio
-    sprite.height = CELL_HEIGHT * this.ratio
+    sprite.width = this.cellWidth * this.ratio
+    sprite.height = this.cellHeight * this.ratio
     const context = sprite.getContext('2d')
     context.scale(this.ratio, this.ratio)
     const palette = (this.darkMode ? dark : light)[material.tone]
     context.globalAlpha = opacity * (0.18 + density * 0.66)
     context.fillStyle = palette[0]
-    context.fillRect(0.15, 0.15, CELL_WIDTH - 0.3, CELL_HEIGHT - 0.3)
+    context.fillRect(0.15, 0.15, this.cellWidth - 0.3, this.cellHeight - 0.3)
     context.globalAlpha = opacity
     context.fillStyle = palette[1]
-    context.font = '8px Menlo, Consolas, monospace'
+    context.font = `${8 * this.scale}px Menlo, Consolas, monospace`
     context.textAlign = 'center'
     context.textBaseline = 'alphabetic'
-    context.fillText(material.glyph, CELL_WIDTH / 2, CELL_HEIGHT - 1)
+    context.fillText(
+      material.glyph,
+      this.cellWidth / 2,
+      this.cellHeight - this.scale
+    )
     this.atlas.set(key, sprite)
     return sprite
   }
@@ -73,26 +95,28 @@ export class CharacterRenderer {
   draw(scene) {
     const start = performance.now()
     const context = this.context
+    const { cellWidth, cellHeight } = this
     context.fillStyle = this.darkMode ? '#202023' : '#f0e7db'
-    context.fillRect(0, 0, SCENE_WIDTH, SCENE_HEIGHT)
+    context.fillRect(0, 0, VIEW_WIDTH, VIEW_HEIGHT)
     let cells = 0
-    for (let vertical = 0; vertical < SCENE_HEIGHT; vertical += CELL_HEIGHT) {
+    for (let vertical = 0; vertical < VIEW_HEIGHT; vertical += cellHeight) {
       for (
         let horizontal = 0;
-        horizontal < SCENE_WIDTH;
-        horizontal += CELL_WIDTH
+        horizontal < VIEW_WIDTH;
+        horizontal += cellWidth
       ) {
         const material = scene.sample(
-          horizontal + CELL_WIDTH / 2,
-          vertical + CELL_HEIGHT / 2
+          VIEW_LEFT + horizontal + cellWidth / 2,
+          VIEW_TOP + vertical + cellHeight / 2,
+          cellWidth
         )
         if (!material || (material.opacity ?? 1) < 0.08) continue
         context.drawImage(
           this.getGlyphTile(material),
           horizontal,
           vertical,
-          CELL_WIDTH,
-          CELL_HEIGHT
+          cellWidth,
+          cellHeight
         )
         cells++
       }

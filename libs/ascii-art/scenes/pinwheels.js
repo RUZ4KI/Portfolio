@@ -2,7 +2,6 @@ import { CELL_WIDTH, FULL_TURN } from '../constants'
 import { clamp } from '../math'
 
 export const pinwheelInfo = {
-  name: 'A little borrowed wind',
   caption: 'Three paper firkis, one passing breeze.',
   hint: 'Brush past the paper. Click to lend it a gust.',
   description:
@@ -303,7 +302,8 @@ export class PinwheelScene {
     }
   }
 
-  sample(horizontal, vertical) {
+  sample(horizontal, vertical, cellWidth = CELL_WIDTH) {
+    const edgeReach = (cellWidth * 0.3) ** 2
     for (
       let wheelIndex = this.wheels.length - 1;
       wheelIndex >= 0;
@@ -377,7 +377,8 @@ export class PinwheelScene {
             const offsetY = vertical - start[1] - fraction * deltaY
             nearest = Math.min(nearest, offsetX * offsetX + offsetY * offsetY)
           }
-          if (nearest < 2.25) return face.kind === 0 ? face.edge : face.crease
+          if (nearest < edgeReach)
+            return face.kind === 0 ? face.edge : face.crease
           const paperX =
             face.uX * horizontal + face.uY * vertical + face.uOffset
           const paperY =
@@ -398,7 +399,10 @@ export class PinwheelScene {
         }
       }
       if (vertical >= wheel.centerY && vertical <= wheel.bottom) {
-        if (Math.abs(horizontal - wheel.horizontal) < CELL_WIDTH / 2)
+        if (
+          Math.floor(horizontal / cellWidth) ===
+          Math.floor(wheel.horizontal / cellWidth)
+        )
           return STEM
       }
       const groundX = (horizontal - wheel.horizontal) / 23

@@ -1,9 +1,15 @@
 import {
   FRAME_INTERVAL,
   MAX_FRAME_DELTA,
+  NARROW_CELL_SCALE,
+  NARROW_WIDTH,
   SCENE_HEIGHT,
   SCENE_WIDTH,
-  SIMULATION_STEP
+  SIMULATION_STEP,
+  VIEW_HEIGHT,
+  VIEW_LEFT,
+  VIEW_TOP,
+  VIEW_WIDTH
 } from './constants'
 import { CharacterRenderer } from './renderer'
 
@@ -18,17 +24,53 @@ export class ScenePlayer {
     this.lastDraw = 0
     this.accumulator = 0
     this.disposed = false
+    this.onScreen = true
     this.tick = this.tick.bind(this)
     this.syncPlayback = this.syncPlayback.bind(this)
+    this.updateLayout = this.updateLayout.bind(this)
+    this.handlePixelRatio = this.handlePixelRatio.bind(this)
     this.canvas.dataset.scene = artwork.id
     document.addEventListener('visibilitychange', this.syncPlayback)
-    this.draw()
+    this.resizeObserver = new ResizeObserver(this.updateLayout)
+    this.resizeObserver.observe(canvas)
+    this.intersectionObserver = new IntersectionObserver(entries => {
+      this.onScreen = entries[entries.length - 1].isIntersecting
+      this.syncPlayback()
+    })
+    this.intersectionObserver.observe(canvas)
+    this.watchPixelRatio()
+    this.updateLayout()
   }
 
   get canAnimate() {
     return (
-      !this.options.paused && !this.options.reducedMotion && !document.hidden
+      !this.options.paused &&
+      !this.options.reducedMotion &&
+      !document.hidden &&
+      this.onScreen
     )
+  }
+
+  watchPixelRatio() {
+    this.pixelRatioQuery?.removeEventListener('change', this.handlePixelRatio)
+    this.pixelRatioQuery = window.matchMedia(
+      `(resolution: ${window.devicePixelRatio || 1}dppx)`
+    )
+    this.pixelRatioQuery.addEventListener('change', this.handlePixelRatio)
+  }
+
+  handlePixelRatio() {
+    this.watchPixelRatio()
+    this.updateLayout()
+  }
+
+  updateLayout() {
+    if (this.disposed) return
+    const width = this.canvas.getBoundingClientRect().width
+    const scale = width && width < NARROW_WIDTH ? NARROW_CELL_SCALE : 1
+    const devicePixels = width * Math.min(window.devicePixelRatio || 1, 2)
+    const ratio = Math.min(3, Math.max(1, Math.ceil(devicePixels / VIEW_WIDTH)))
+    if (this.renderer.configure(ratio, scale)) this.draw()
   }
 
   setOptions(options) {
@@ -77,9 +119,9 @@ export class ScenePlayer {
     const bounds = this.canvas.getBoundingClientRect()
     if (!bounds.width || !bounds.height) return
     this.scene.pointer.horizontal =
-      ((clientX - bounds.left) / bounds.width) * SCENE_WIDTH
+      VIEW_LEFT + ((clientX - bounds.left) / bounds.width) * VIEW_WIDTH
     this.scene.pointer.vertical =
-      ((clientY - bounds.top) / bounds.height) * SCENE_HEIGHT
+      VIEW_TOP + ((clientY - bounds.top) / bounds.height) * VIEW_HEIGHT
     this.scene.pointer.active = true
   }
 
@@ -88,20 +130,24 @@ export class ScenePlayer {
   }
 
   interact(atCenter = false) {
-    if (!this.canAnimate) return false
+    if (!this.canAnimate) return 'paused'
     if (atCenter) {
       this.scene.pointer.horizontal = SCENE_WIDTH / 2
       this.scene.pointer.vertical = SCENE_HEIGHT / 2
       this.scene.pointer.active = true
     }
-    this.scene.interact()
-    return true
+    const moved = this.scene.interact() !== false
+    if (atCenter) this.releasePointer()
+    return moved ? 'played' : 'missed'
   }
 
   dispose() {
     this.disposed = true
     cancelAnimationFrame(this.frame)
     document.removeEventListener('visibilitychange', this.syncPlayback)
+    this.pixelRatioQuery.removeEventListener('change', this.handlePixelRatio)
+    this.resizeObserver.disconnect()
+    this.intersectionObserver.disconnect()
     this.renderer.dispose()
   }
 }
