@@ -1,4 +1,4 @@
-import { CELL_WIDTH, FULL_TURN } from '../constants'
+import { CELL_HEIGHT, CELL_WIDTH, FULL_TURN } from '../constants'
 import { clamp } from '../math'
 
 export const pinwheelInfo = {
@@ -304,6 +304,7 @@ export class PinwheelScene {
 
   sample(horizontal, vertical, cellWidth = CELL_WIDTH) {
     const edgeReach = (cellWidth * 0.3) ** 2
+    const groundRadiusY = (CELL_HEIGHT * cellWidth) / CELL_WIDTH / 2 + 0.5
     for (
       let wheelIndex = this.wheels.length - 1;
       wheelIndex >= 0;
@@ -314,7 +315,7 @@ export class PinwheelScene {
         horizontal < wheel.horizontal - wheel.radius * 1.3 ||
         horizontal > wheel.horizontal + wheel.radius * 1.3 + 20 ||
         vertical < wheel.minY - 4 ||
-        vertical > wheel.bottom + 8
+        vertical > wheel.bottom + 3 + groundRadiusY
       )
         continue
       const pinX = horizontal - wheel.centerX - wheel.radius * 0.0224
@@ -406,7 +407,7 @@ export class PinwheelScene {
           return STEM
       }
       const groundX = (horizontal - wheel.horizontal) / 23
-      const groundY = (vertical - wheel.bottom - 3) / 3.5
+      const groundY = (vertical - wheel.bottom - 3) / groundRadiusY
       if (groundX * groundX + groundY * groundY < 1) return FOOT
     }
     return null

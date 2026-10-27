@@ -58,13 +58,13 @@ const AsciiCanvas = ({
       w="full"
       h="auto"
       aspectRatio={`${VIEW_WIDTH} / ${VIEW_HEIGHT}`}
-      cursor="crosshair"
       touchAction="pan-y"
-      _focusVisible={{
-        outline: '2px solid',
-        outlineColor: 'grassTeal',
-        outlineOffset: '4px'
-      }}
+      outline="none"
+      // _focusVisible={{
+      //   outline: '2px solid',
+      //   outlineColor: 'grassTeal',
+      //   outlineOffset: '4px'
+      // }}
       onPointerMove={event =>
         playerRef.current?.movePointer(event.clientX, event.clientY)
       }

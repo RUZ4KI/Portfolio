@@ -4,7 +4,13 @@ import Layout from '../components/layouts/article'
 
 const AsciiArt = () => (
   <Layout title="ASCII Art">
-    <Box maxW="800px" mx="auto" py={{ base: 4, md: 8 }}>
+    <Box
+      w="full"
+      minH="calc(100svh - 112px)"
+      display="grid"
+      alignItems="center"
+      py={{ base: 4, md: 8 }}
+    >
       <AsciiGallery />
     </Box>
   </Layout>
