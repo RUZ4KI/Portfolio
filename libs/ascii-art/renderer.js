@@ -9,18 +9,18 @@ import {
 } from './constants'
 
 const light = {
-  jade: ['#5a937b', '#1d6258', '#a9c2a5'],
-  teal: ['#4a9695', '#0d5d69', '#8eb9ab'],
-  blue: ['#347e9c', '#144c70', '#8ab9be'],
-  indigo: ['#213e62', '#0c273f', '#547d92'],
-  gold: ['#c2a363', '#8b6b35', '#e0c99a'],
-  bronze: ['#a58b56', '#74603d', '#c7b784'],
-  shaft: ['#c7b388', '#87724d', '#e6d5af'],
-  paper: ['#e7e1ce', '#8c8979', '#faf8ed'],
-  fold: ['#c7c4b3', '#757a70', '#e1decd'],
-  edge: ['#a4a595', '#59665e', '#d0cdb9'],
-  clay: ['#cb9c73', '#916646', '#e0bf9b'],
-  clayFold: ['#ab805f', '#77563e', '#cda27c'],
+  jade: ['#397b60', '#154d42', '#a9c2a5'],
+  teal: ['#287c7b', '#084956', '#8eb9ab'],
+  blue: ['#246587', '#103b59', '#8ab9be'],
+  indigo: ['#1c3557', '#091f33', '#547d92'],
+  gold: ['#aa843d', '#67471f', '#e0c99a'],
+  bronze: ['#8d703b', '#554325', '#c7b784'],
+  shaft: ['#ad925f', '#65512f', '#e6d5af'],
+  paper: ['#d5ccb3', '#5e594b', '#faf8ed'],
+  fold: ['#aaa58e', '#53594d', '#e1decd'],
+  edge: ['#888d79', '#3f4c43', '#d0cdb9'],
+  clay: ['#b78257', '#6f492f', '#e0bf9b'],
+  clayFold: ['#946745', '#5b3d29', '#cda27c'],
   shadow: ['#bcc5b6', '#a1b0a4', '#dbe0d3']
 }
 const dark = {
